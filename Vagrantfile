@@ -5,9 +5,9 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-    config.vm.box = "precise32"
+    config.vm.box = "precise64"
 
-    config.vm.box_url = "http://files.vagrantup.com/precise32.box"
+    config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
     config.vm.network :forwarded_port, guest: 80, host: 8080
 
@@ -18,6 +18,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # If true, then any SSH connections made will enable agent forwarding.
     # Default value: false
     # config.ssh.forward_agent = true
+
+    # Provider-specific configuration so you can fine-tune various
+    # backing providers for Vagrant. These expose provider-specific options.
+    # Example for VirtualBox:
+    #
+    config.vm.provider "virtualbox" do |vb|
+    #   # Don't boot with headless mode
+    #   vb.gui = true
+    #
+    #   # Use VBoxManage to customize the VM. For example to change memory:
+    #vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    #vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+     vb.customize ["modifyvm", :id, "--cpuexecutioncap", "95"]
+     vb.memory = 1024
+     vb.cpus = 2
+     #vb.customize ["modifyvm", :id, "--memory", "1024"]
+    end
 
     # Share an additional folder to the guest VM. The first argument is
     # the path on the host to the actual folder. The second argument is
