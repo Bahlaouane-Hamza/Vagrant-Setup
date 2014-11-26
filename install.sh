@@ -19,7 +19,7 @@ echo "--- Updating packages list ---"
 sudo apt-get update
 
 echo "--- Installing PHP-specific packages ---"
-sudo apt-get install -y php5 apache2 libapache2-mod-php5 php5-curl php5-gd php5-mcrypt mysql-server-5.5 php5-mysql git-core
+sudo apt-get install -y php5 apache2 libapache2-mod-php5 php5-curl php5-intl php5-gd php5-mcrypt mysql-server-5.5 php5-mysql git-core
 
 echo "--- Installing and configuring Xdebug ---"
 sudo apt-get install -y php5-xdebug
@@ -39,14 +39,25 @@ sudo ln -fs /vagrant/public /var/www
 
 
 echo "--- What developer codes without errors turned on? Not you, master. ---"
-sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php5/apache2/php.ini
-sed -i "s/display_errors = .*/display_errors = On/" /etc/php5/apache2/php.ini
+# sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php5/apache2/php.ini
+# sed -i "s/display_errors = .*/display_errors = On/" /etc/php5/apache2/php.ini
+export TZ="Europe/London"
+sudo sed -i "s/^;date.timezone =$/date.timezone = Europe\/London/" /etc/php5/apache2/php.ini
+sudo sed -i "s/^;date.timezone =$/date.timezone = Europe\/London/" /etc/php5/cli/php.ini
+sudo sed -i "s/display_errors = Off/display_errors = On/" /etc/php5/apache2/php.ini
+sudo sed -i "s/html_errors = Off/html_errors = On/" /etc/php5/apache2/php.ini
+sudo sed -i "s/track_errors = Off/track_errors = On/" /etc/php5/apache2/php.ini
+sudo sed -i "s/short_open_tag = On/short_open_tag = Off/" /etc/php5/apache2/php.ini
+sudo sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /etc/php5/apache2/php.ini
+sudo sed -i "s/max_execution_time = 30/max_execution_time = 0/" /etc/php5/apache2/php.ini
 
 sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 
 echo "--- Restarting Apache ---"
 sudo service apache2 restart
+sudo service mysql restart
 
+sudo apt-get clean
 echo "--- Composer is the future. But you knew that, did you master? Nice job. ---"
 curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
