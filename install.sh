@@ -41,9 +41,10 @@ sudo a2enmod rewrite
 
 echo "--- Setting document root ---"
 sudo rm -rf /var/www
-sudo ln -fs /vagrant/public /var/www
+mkdir /var/www/html
+sudo ln -fs /vagrant/public /var/www/html
 
-sudo ln -fs /usr/share/phpmyadmin /vagrant/public/phpmyadmin
+sudo ln -fs /usr/share/phpmyadmin /var/www/html/phpmyadmin
 
 
 echo "--- What developer codes without errors turned on? Not you, master. ---"
