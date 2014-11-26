@@ -9,6 +9,12 @@ echo "--- MySQL time ---"
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password root'
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password root'
 
+echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/app-password-confirm password root" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/mysql/admin-pass password root" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/mysql/app-pass password root" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect none" | debconf-set-selections
+
 echo "--- Installing base packages ---"
 sudo apt-get install -y vim curl python-software-properties
 
@@ -19,7 +25,7 @@ echo "--- Updating packages list ---"
 sudo apt-get update
 
 echo "--- Installing PHP-specific packages ---"
-sudo apt-get install -y php5 apache2 libapache2-mod-php5 php5-curl php5-intl php5-gd php5-mcrypt mysql-server-5.5 php5-mysql git-core
+sudo apt-get install -y php5 apache2 libapache2-mod-php5 php5-curl php5-intl php5-gd php5-mcrypt mysql-server-5.5 php5-mysql phpmyadmin git-core
 
 echo "--- Installing and configuring Xdebug ---"
 sudo apt-get install -y php5-xdebug
@@ -36,6 +42,8 @@ sudo a2enmod rewrite
 echo "--- Setting document root ---"
 sudo rm -rf /var/www
 sudo ln -fs /vagrant/public /var/www
+
+sudo ln -fs /usr/share/phpmyadmin /vagrant/public/phpmyadmin
 
 
 echo "--- What developer codes without errors turned on? Not you, master. ---"
