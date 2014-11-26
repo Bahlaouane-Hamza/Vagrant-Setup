@@ -1,5 +1,8 @@
 My install Bash script for Vagrant.
 
+# TODO
+# Install node.js & sass & grunt & symfony 2 by default# TODO.
+
 Thanks goes to the following references:
 
 - [https://gist.github.com/fideloper/7074502](https://gist.github.com/fideloper/7074502)
