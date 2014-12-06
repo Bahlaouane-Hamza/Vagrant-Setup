@@ -51,6 +51,14 @@ gem install sass
 echo "--- Installing Grunt ---"
 sudo npm install -g grunt-cli
 
+echo "--- Updating packages list ---"
+sudo apt-get update
+
+echo "--- Installing Mailcatcher ---"
+sudo apt-get install -y sqlite3 libsqlite3-dev build-essential g++
+sudo gem install mailcatcher --no-ri --no-rdoc
+mailcatcher --http-ip=192.168.33.12
+
 echo "--- Enabling mod-rewrite ---"
 sudo a2enmod rewrite
 
@@ -67,6 +75,7 @@ echo "--- What developer codes without errors turned on? Not you, master. ---"
 # sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php5/apache2/php.ini
 # sed -i "s/display_errors = .*/display_errors = On/" /etc/php5/apache2/php.ini
 export TZ="Europe/London"
+sudo sed -i '/;sendmail_path =/c sendmail_path = "/usr/bin/env /usr/local/bin/catchmail"' /etc/php5/apache2/php.ini
 sudo sed -i "s/^;date.timezone =$/date.timezone = Europe\/London/" /etc/php5/apache2/php.ini
 sudo sed -i "s/^;date.timezone =$/date.timezone = Europe\/London/" /etc/php5/cli/php.ini
 sudo sed -i "s/display_errors = Off/display_errors = On/" /etc/php5/apache2/php.ini
@@ -80,6 +89,7 @@ sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/sites-available/de
 sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 
 echo "--- Restarting Apache ---"
+mailcatcher --http-ip=192.168.33.12
 sudo service apache2 restart
 sudo service mysql restart
 
