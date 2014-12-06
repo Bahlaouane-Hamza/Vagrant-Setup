@@ -20,12 +20,12 @@ sudo apt-get install -y vim curl python-software-properties
 
 echo "--- We want the bleeding edge of PHP, right master? ---"
 sudo add-apt-repository -y ppa:ondrej/php5
-
+sudo add-apt-repository -y ppa:chris-lea/node.js
 echo "--- Updating packages list ---"
 sudo apt-get update
 
 echo "--- Installing PHP-specific packages ---"
-sudo apt-get install -y php5 apache2 libapache2-mod-php5 php5-curl php5-intl php5-gd php5-mcrypt mysql-server-5.5 php5-mysql phpmyadmin git-core
+sudo apt-get install -y php5 apache2 libapache2-mod-php5 php5-curl php5-intl php5-gd php5-mcrypt mysql-server-5.5 php5-mysql phpmyadmin git-core nodejs
 
 echo "--- Installing and configuring Xdebug ---"
 sudo apt-get install -y php5-xdebug
@@ -36,16 +36,32 @@ xdebug.cli_color=1
 xdebug.show_local_vars=1
 EOF
 
+echo "--- Installing Ruby packages ---"
+# Download RVM
+\curl -sSL https://get.rvm.io | bash
+# Install RVM
+source /home/vagrant/.rvm/scripts/rvm
+# Install Ruby 1.9.3
+rvm install 1.9.3
+rvm use 1.9.3
+
+echo "--- Installing Sass ---"
+gem install sass
+
+echo "--- Installing Grunt ---"
+sudo npm install -g grunt-cli
+
 echo "--- Enabling mod-rewrite ---"
 sudo a2enmod rewrite
 
 echo "--- Setting document root ---"
-sudo rm -rf /var/www
+sudo chown -R vagrant:www-data /var/www
 mkdir /var/www/html
 sudo ln -fs /vagrant/public /var/www/html
 
 sudo ln -fs /usr/share/phpmyadmin /var/www/html/phpmyadmin
 
+echo "cd /var/www/html" >> /home/vagrant/.bashrc
 
 echo "--- What developer codes without errors turned on? Not you, master. ---"
 # sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php5/apache2/php.ini
@@ -60,6 +76,7 @@ sudo sed -i "s/short_open_tag = On/short_open_tag = Off/" /etc/php5/apache2/php.
 sudo sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /etc/php5/apache2/php.ini
 sudo sed -i "s/max_execution_time = 30/max_execution_time = 0/" /etc/php5/apache2/php.ini
 
+sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/sites-available/default
 sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 
 echo "--- Restarting Apache ---"
