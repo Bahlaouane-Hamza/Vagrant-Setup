@@ -1,9 +1,9 @@
 **My install Bash script for Vagrant.**
 
  - IP : **192.168.33.12**
- - LAMP
+ - LAMP (Ubuntu 12.04 LTS)
  - Curl, VIM, GIT, xdebug
- - Sass, Grunt
+ - Sass, Grunt, Bower, Yeoman, Generator-webapp, Generator-angular
  - MailCatcher (  Port 1025 )
  - Composer
 

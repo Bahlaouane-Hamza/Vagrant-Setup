@@ -51,6 +51,18 @@ gem install sass
 echo "--- Installing Grunt ---"
 sudo npm install -g grunt-cli
 
+echo "--- Installing Bower ---"
+sudo npm install -g bower
+
+echo "--- Installing Yeoman ---"
+sudo npm install -g yo
+
+echo "--- Installing Generator:Webapp ---"
+sudo npm install -g generator-webapp
+
+echo "--- Installing Generator:Angular ---"
+sudo npm install -g generator-angular
+
 echo "--- Updating packages list ---"
 sudo apt-get update
 
@@ -91,6 +103,18 @@ sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 echo "--- Restarting Apache ---"
 mailcatcher --http-ip=192.168.33.12
 sudo service apache2 restart
+
+
+echo "Updating mysql configs in /etc/mysql/my.cnf."
+sudo sed -i "s/bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
+echo "Updated mysql bind address in /etc/mysql/my.cnf to 0.0.0.0 to allow external connections."
+
+echo "Assigning mysql user remote_user access on %."
+sudo mysql -u root -proot --execute "CREATE USER 'remote_user'@'%' IDENTIFIED BY 'root';"
+echo "Assigned mysql user remote_user access on all hosts."
+sudo mysql -u root -proot --execute "GRANT ALL PRIVILEGES ON * . * TO 'remote_user'@'%';"
+
+echo "--- Restarting Mysql ---"
 sudo service mysql restart
 
 sudo apt-get clean
